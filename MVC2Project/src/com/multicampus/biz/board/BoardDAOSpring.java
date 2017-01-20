@@ -21,6 +21,8 @@ public class BoardDAOSpring {
 	private final String BOARD_DELETE = "delete board where seq=?";
 	private final String BOARD_GET    = "select * from board where seq=?";
 	private final String BOARD_LIST   = "select * from board order by seq desc";
+	private final String BOARD_LIST_TITLE   = "select * from board where title like ? order by seq desc";
+	private final String BOARD_LIST_CONTENT   = "select * from board where content like ? order by seq desc";
 	
 	// CRUD 기능의 메소드
 	// 글 등록
@@ -46,13 +48,22 @@ public class BoardDAOSpring {
 	public BoardVO getBoard(BoardVO vo) {
 		System.out.println("===> Spring 기반으로 getBoard() 기능 처리");
 		Object[] args = {vo.getSeq()};
+		
 		return spring.queryForObject(BOARD_GET, args, new BoardRowMapper());
 	}
 
 	// 글 목록 검색
 	public List<BoardVO> getBoardList(BoardVO vo) {
 		System.out.println("===> Spring 기반으로 getBoardList() 기능 처리");
-		return spring.query(BOARD_LIST, new BoardRowMapper());
+		Object[] args = {"%"+vo.getSearchKeyword()+"%"};
+		
+		if(vo.getSearchCondition().equals("TITLE") && !vo.getSearchKeyword().equals("")){
+			return spring.query(BOARD_LIST_TITLE, args, new BoardRowMapper());
+		}else if(vo.getSearchCondition().equals("CONTENT") && !vo.getSearchKeyword().equals("")){
+			return spring.query(BOARD_LIST_CONTENT, args, new BoardRowMapper());
+		}else{
+			return spring.query(BOARD_LIST, new BoardRowMapper());
+		}
 	}
 }
 

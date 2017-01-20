@@ -21,6 +21,7 @@ public class UserDAOSpring {
 	// 회원 상세 조회
 	public UserVO getUser(UserVO vo) {
 		System.out.println("===> Spring 기반으로 getUser() 기능 처리");
+		System.out.println("vo.getId()="+vo.getId()+", vo.getPassword()"+vo.getPassword());
 		Object[] args = {vo.getId(), vo.getPassword()};
 		return spring.queryForObject(USER_GET, args, new UserRowMapper());
 	}
